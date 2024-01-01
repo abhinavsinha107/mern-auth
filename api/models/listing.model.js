@@ -10,19 +10,15 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    furnished: {
+    fitness: {
       type: Boolean,
       required: true,
     },
-    parking: {
+    placement: {
       type: Boolean,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
-    offer: {
+    travel: {
       type: Boolean,
       required: true,
     },
