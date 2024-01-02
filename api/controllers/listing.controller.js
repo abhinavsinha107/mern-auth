@@ -61,3 +61,47 @@ export const getListing = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getListings = async (req, res, next) => {
+  try {
+    const limit = parseInt(req.query.limit) || 9;
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    let travel = req.query.travel;
+
+    if (travel === undefined || travel === "false") {
+      travel = { $in: [false, true] };
+    }
+
+    let fitness = req.query.fitness;
+
+    if (fitness === undefined || fitness === "false") {
+      fitness = { $in: [false, true] };
+    }
+
+    let placement = req.query.placement;
+
+    if (placement === undefined || placement === "false") {
+      placement = { $in: [false, true] };
+    }
+
+    const searchTerm = req.query.searchTerm || "";
+
+    const sort = req.query.sort || "createdAt";
+
+    const order = req.query.order || "desc";
+
+    const listings = await Listing.find({
+      name: { $regex: searchTerm, $options: "i" },
+      travel,
+      fitness,
+      placement,
+    })
+      .sort({ [sort]: order })
+      .limit(limit)
+      .skip(startIndex);
+
+    return res.status(200).json(listings);
+  } catch (error) {
+    next(error);
+  }
+};
